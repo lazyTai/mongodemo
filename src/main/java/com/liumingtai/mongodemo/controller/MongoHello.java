@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +39,16 @@ public class MongoHello {
         Criteria criteria = where("name").in(name);
         List<User> users = mongoTemplate.findAll(User.class);
         return users;
+    }
+
+    @ApiOperation(value = "get user by username", httpMethod = "GET")
+    @RequestMapping("/findUserByUserName")
+    List<User> findByTitle(String userName) {
+        Criteria criteria = new Criteria();
+        if (userName != null) {
+            criteria.and("userName").is(userName);
+        }
+        return mongoTemplate.find(query(criteria), User.class);
     }
 
 
